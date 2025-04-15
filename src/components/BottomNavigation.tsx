@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Gift, Settings } from 'lucide-react';
+import { Search, Gift, Twitter, Settings } from 'lucide-react';
 
 const BottomNavigation: React.FC = () => {
   const location = useLocation();
@@ -17,7 +17,7 @@ const BottomNavigation: React.FC = () => {
       <div className="flex items-center justify-around h-16">
         <Link 
           to="/" 
-          className={`flex flex-col items-center justify-center w-1/3 h-full ${
+          className={`flex flex-col items-center justify-center w-1/4 h-full ${
             isActive('/') ? 'text-scryptex-primary' : 'text-gray-500'
           }`}
         >
@@ -27,7 +27,7 @@ const BottomNavigation: React.FC = () => {
         
         <Link 
           to="/airdrops" 
-          className={`flex flex-col items-center justify-center w-1/3 h-full ${
+          className={`flex flex-col items-center justify-center w-1/4 h-full ${
             isActive('/airdrops') ? 'text-scryptex-primary' : 'text-gray-500'
           }`}
         >
@@ -36,8 +36,18 @@ const BottomNavigation: React.FC = () => {
         </Link>
         
         <Link 
+          to="/twitter-post" 
+          className={`flex flex-col items-center justify-center w-1/4 h-full ${
+            isActive('/twitter-post') ? 'text-scryptex-primary' : 'text-gray-500'
+          }`}
+        >
+          <Twitter className="h-5 w-5" />
+          <span className="text-xs mt-1">Twitter</span>
+        </Link>
+        
+        <Link 
           to="/settings" 
-          className={`flex flex-col items-center justify-center w-1/3 h-full ${
+          className={`flex flex-col items-center justify-center w-1/4 h-full ${
             isActive('/settings') ? 'text-scryptex-primary' : 'text-gray-500'
           }`}
         >

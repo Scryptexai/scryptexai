@@ -4,15 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from "lucide-react";
-
-export interface AirdropProject {
-  id: string;
-  name: string;
-  logo: string;
-  description: string;
-  taskSummary: string;
-  status: 'active' | 'upcoming' | 'ended';
-}
+import { AirdropProject } from '@/services/api';
 
 interface AirdropCardProps {
   project: AirdropProject;
@@ -22,7 +14,12 @@ const AirdropCard: React.FC<AirdropCardProps> = ({ project }) => {
   const navigate = useNavigate();
 
   const handleAnalyze = () => {
-    navigate(`/project/${project.id}`);
+    navigate(`/project/${project.id}`, { 
+      state: { 
+        projectName: project.name,
+        website: project.website
+      }
+    });
   };
 
   return (

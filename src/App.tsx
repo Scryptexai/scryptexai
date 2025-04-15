@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import AirdropList from "./pages/AirdropList";
 import ProjectDetail from "./pages/ProjectDetail";
 import Settings from "./pages/Settings";
+import TwitterPost from "./pages/TwitterPost";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/airdrops" element={<AirdropList />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
+          <Route path="/twitter-post" element={<TwitterPost />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-type FetcherType = 'about_project' | 'fetch_goals' | 'fetch_team' | 'fetch_roadmap' | 'fetch_vc' | 'fetch_tokenomics';
+import { FetcherType } from '@/services/api';
+import { Check } from 'lucide-react';
 
 interface FetcherButtonsProps {
   currentFetcher: FetcherType;
@@ -17,7 +17,9 @@ const FetcherButtons: React.FC<FetcherButtonsProps> = ({ currentFetcher, onFetch
     { id: 'fetch_team', label: 'Team' },
     { id: 'fetch_roadmap', label: 'Roadmap' },
     { id: 'fetch_vc', label: 'Investors' },
-    { id: 'fetch_tokenomics', label: 'Tokenomics' }
+    { id: 'fetch_tokenomics', label: 'Tokenomics' },
+    { id: 'fetch_airdrop', label: 'Airdrop' },
+    { id: 'fetch_partner', label: 'Partners' }
   ];
 
   return (
@@ -36,7 +38,10 @@ const FetcherButtons: React.FC<FetcherButtonsProps> = ({ currentFetcher, onFetch
                 <span>{option.label}</span>
               </div>
             ) : (
-              option.label
+              <div className="flex items-center">
+                <span>{option.label}</span>
+                {currentFetcher === option.id && <Check className="ml-1 w-3 h-3" />}
+              </div>
             )}
           </button>
         ))}

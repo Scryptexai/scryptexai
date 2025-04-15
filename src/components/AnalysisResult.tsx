@@ -3,16 +3,26 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import FetcherButtons from './FetcherButtons';
-
-type FetcherType = 'about_project' | 'fetch_goals' | 'fetch_team' | 'fetch_roadmap' | 'fetch_vc' | 'fetch_tokenomics';
+import { fetchProjectData, FetcherType } from '@/services/api';
+import { toast } from "sonner";
+import { Button } from './ui/button';
+import { Share } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface AnalysisResultProps {
   projectName: string;
+  website: string;
   initialData?: string;
   isLoading?: boolean;
 }
 
-const AnalysisResult: React.FC<AnalysisResultProps> = ({ projectName, initialData, isLoading = false }) => {
+const AnalysisResult: React.FC<AnalysisResultProps> = ({ 
+  projectName, 
+  website,
+  initialData, 
+  isLoading = false 
+}) => {
+  const navigate = useNavigate();
   const [currentFetcher, setCurrentFetcher] = useState<FetcherType>('about_project');
   const [fetcherData, setFetcherData] = useState<Record<FetcherType, string | null>>({
     about_project: initialData || null,
@@ -20,11 +30,13 @@ const AnalysisResult: React.FC<AnalysisResultProps> = ({ projectName, initialDat
     fetch_team: null,
     fetch_roadmap: null,
     fetch_vc: null,
-    fetch_tokenomics: null
+    fetch_tokenomics: null,
+    fetch_airdrop: null,
+    fetch_partner: null
   });
   const [fetchingData, setFetchingData] = useState<FetcherType | null>(null);
 
-  const handleFetch = (fetcher: FetcherType) => {
+  const handleFetch = async (fetcher: FetcherType) => {
     if (fetchingData) return;
     
     setCurrentFetcher(fetcher);
@@ -36,30 +48,57 @@ const AnalysisResult: React.FC<AnalysisResultProps> = ({ projectName, initialDat
     
     setFetchingData(fetcher);
     
-    // Simulate API call
-    setTimeout(() => {
-      const dummyData: Record<FetcherType, string> = {
-        about_project: `${projectName} is a decentralized protocol designed for secure and efficient cross-chain transactions. It leverages zero-knowledge proofs to ensure privacy and security while maintaining high throughput and low transaction fees.`,
-        fetch_goals: `The primary goals of ${projectName} are:\n\n1. Enable seamless cross-chain liquidity\n2. Reduce transaction costs by 90%\n3. Enhance privacy with zero-knowledge technology\n4. Achieve 10,000+ TPS by Q4 2025\n5. Become the standard for cross-chain infrastructure`,
-        fetch_team: `The team behind ${projectName} consists of experienced developers from top blockchain projects:\n\n- Alex Chen: Former Ethereum core developer\n- Maria Rodriguez: ZK-proof specialist from Zcash\n- Raj Patel: Ex-Binance security lead\n- Sarah Kim: Tokenomics expert from Solana`,
-        fetch_roadmap: `${projectName} Roadmap:\n\nQ2 2025: Testnet launch\nQ3 2025: Mainnet beta\nQ4 2025: Full mainnet launch\nQ1 2026: Cross-chain DEX integration\nQ2 2026: Mobile wallet release\nQ4 2026: Enterprise solutions`,
-        fetch_vc: `${projectName} has secured $28M in funding from:\n\n- Paradigm: $10M\n- a16z Crypto: $8M\n- Polychain Capital: $5M\n- Jump Crypto: $3M\n- Coinbase Ventures: $2M`,
-        fetch_tokenomics: `${projectName} Token Distribution:\n\n- 20% Team (4-year vesting)\n- 15% Foundation\n- 25% Private Sale\n- 10% Public Sale\n- 15% Ecosystem Development\n- 10% Liquidity\n- 5% Strategic Partners`
-      };
+    try {
+      const data = await fetchProjectData({
+        projectName,
+        website,
+        fetcherType: fetcher
+      });
       
       setFetcherData(prev => ({
         ...prev,
-        [fetcher]: dummyData[fetcher]
+        [fetcher]: data
       }));
-      
+    } catch (error) {
+      toast.error(`Failed to fetch ${fetcher.replace('fetch_', '')} data`);
+      console.error("Fetcher error:", error);
+    } finally {
       setFetchingData(null);
-    }, 1500);
+    }
   };
+
+  const handleShareToTwitter = () => {
+    navigate('/twitter-post', { 
+      state: { 
+        projectName, 
+        aboutData: fetcherData.about_project || '',
+        tokenomics: fetcherData.fetch_tokenomics || ''
+      } 
+    });
+  };
+
+  const completedFetchers = Object.entries(fetcherData)
+    .filter(([_, value]) => value !== null)
+    .length;
 
   return (
     <Card className="w-full shadow-soft rounded-2xl mt-6">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold">Analysis Results</CardTitle>
+      <CardHeader className="pb-2 flex flex-row items-center justify-between">
+        <div>
+          <CardTitle className="text-lg font-semibold">Analysis Results</CardTitle>
+          <p className="text-xs text-scryptex-muted mt-1">
+            {completedFetchers} of 8 analyses completed
+          </p>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="border-scryptex-primary text-scryptex-primary hover:bg-scryptex-primary hover:text-white"
+          onClick={handleShareToTwitter}
+        >
+          <Share className="w-4 h-4 mr-2" />
+          Share
+        </Button>
       </CardHeader>
       
       <FetcherButtons 

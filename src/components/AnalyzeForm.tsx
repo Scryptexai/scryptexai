@@ -4,23 +4,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search } from "lucide-react";
+import { analyzeProject } from '@/services/api';
+import { toast } from "sonner";
 
-const AnalyzeForm = ({ onAnalyze }: { onAnalyze: (data: { projectName: string; website: string }) => void }) => {
+const AnalyzeForm = ({ onAnalyze }: { onAnalyze: (data: { projectName: string; website: string; aboutData: string }) => void }) => {
   const [projectName, setProjectName] = useState('');
   const [website, setWebsite] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!projectName.trim() || !website.trim()) return;
     
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      onAnalyze({ projectName, website });
+    try {
+      const aboutData = await analyzeProject({ projectName, website });
+      onAnalyze({ projectName, website, aboutData });
+    } catch (error) {
+      toast.error("Failed to analyze project. Please try again.");
+      console.error("Analysis error:", error);
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

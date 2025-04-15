@@ -14,18 +14,10 @@ const Index = () => {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleAnalyze = (data: { projectName: string; website: string }) => {
+  const handleAnalyze = (data: { projectName: string; website: string; aboutData: string }) => {
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setAnalysisData({
-        projectName: data.projectName,
-        website: data.website,
-        aboutData: `${data.projectName} is an innovative blockchain project focused on creating scalable decentralized solutions. The project aims to solve fundamental problems in the blockchain space including scalability, security, and interoperability.`
-      });
-      setIsLoading(false);
-    }, 2000);
+    setAnalysisData(data);
+    setIsLoading(false);
   };
 
   return (
@@ -43,6 +35,7 @@ const Index = () => {
       {(analysisData || isLoading) && (
         <AnalysisResult 
           projectName={analysisData?.projectName || ''}
+          website={analysisData?.website || ''}
           initialData={analysisData?.aboutData}
           isLoading={isLoading}
         />
