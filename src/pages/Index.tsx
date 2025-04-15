@@ -16,13 +16,16 @@ const Index = () => {
 
   const handleAnalyze = (data: { projectName: string; website: string; aboutData: string }) => {
     setIsLoading(true);
-    setAnalysisData(data);
-    setIsLoading(false);
+    // Simulating a small delay for UX purposes
+    setTimeout(() => {
+      setAnalysisData(data);
+      setIsLoading(false);
+    }, 300);
   };
 
   return (
     <MainLayout>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <PageHeader 
           title="Scryptex AI Analysis" 
           subtitle="Analyze any crypto project in seconds"

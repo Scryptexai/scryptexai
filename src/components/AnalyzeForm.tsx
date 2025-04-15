@@ -21,6 +21,7 @@ const AnalyzeForm = ({ onAnalyze }: { onAnalyze: (data: { projectName: string; w
     try {
       const aboutData = await analyzeProject({ projectName, website });
       onAnalyze({ projectName, website, aboutData });
+      toast.success("Analysis complete! Explore more with the fetcher buttons below.");
     } catch (error) {
       toast.error("Failed to analyze project. Please try again.");
       console.error("Analysis error:", error);

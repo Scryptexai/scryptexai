@@ -35,6 +35,11 @@ const AnalysisResult: React.FC<AnalysisResultProps> = ({
     fetch_partner: null
   });
   const [fetchingData, setFetchingData] = useState<FetcherType | null>(null);
+  
+  // Track completed fetchers
+  const completedFetchers: FetcherType[] = Object.entries(fetcherData)
+    .filter(([_, value]) => value !== null)
+    .map(([key]) => key as FetcherType);
 
   const handleFetch = async (fetcher: FetcherType) => {
     if (fetchingData) return;
@@ -59,8 +64,10 @@ const AnalysisResult: React.FC<AnalysisResultProps> = ({
         ...prev,
         [fetcher]: data
       }));
+      
+      toast.success(`${fetcher.replace('fetch_', '').replace('_', ' ')} analysis completed`);
     } catch (error) {
-      toast.error(`Failed to fetch ${fetcher.replace('fetch_', '')} data`);
+      toast.error(`Failed to fetch ${fetcher.replace('fetch_', '').replace('_', ' ')} data`);
       console.error("Fetcher error:", error);
     } finally {
       setFetchingData(null);
@@ -77,17 +84,13 @@ const AnalysisResult: React.FC<AnalysisResultProps> = ({
     });
   };
 
-  const completedFetchers = Object.entries(fetcherData)
-    .filter(([_, value]) => value !== null)
-    .length;
-
   return (
     <Card className="w-full shadow-soft rounded-2xl mt-6">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <div>
           <CardTitle className="text-lg font-semibold">Analysis Results</CardTitle>
           <p className="text-xs text-scryptex-muted mt-1">
-            {completedFetchers} of 8 analyses completed
+            {completedFetchers.length} of 8 analyses completed
           </p>
         </div>
         <Button 
@@ -95,6 +98,7 @@ const AnalysisResult: React.FC<AnalysisResultProps> = ({
           size="sm" 
           className="border-scryptex-primary text-scryptex-primary hover:bg-scryptex-primary hover:text-white"
           onClick={handleShareToTwitter}
+          disabled={!fetcherData.about_project}
         >
           <Share className="w-4 h-4 mr-2" />
           Share
@@ -105,6 +109,7 @@ const AnalysisResult: React.FC<AnalysisResultProps> = ({
         currentFetcher={currentFetcher}
         onFetch={handleFetch}
         fetchingData={fetchingData}
+        completedFetchers={completedFetchers}
       />
       
       <CardContent className="p-4">

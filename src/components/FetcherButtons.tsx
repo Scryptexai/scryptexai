@@ -8,9 +8,15 @@ interface FetcherButtonsProps {
   currentFetcher: FetcherType;
   onFetch: (fetcher: FetcherType) => void;
   fetchingData: FetcherType | null;
+  completedFetchers: FetcherType[];
 }
 
-const FetcherButtons: React.FC<FetcherButtonsProps> = ({ currentFetcher, onFetch, fetchingData }) => {
+const FetcherButtons: React.FC<FetcherButtonsProps> = ({ 
+  currentFetcher, 
+  onFetch, 
+  fetchingData, 
+  completedFetchers 
+}) => {
   const fetcherOptions: { id: FetcherType; label: string }[] = [
     { id: 'about_project', label: 'About' },
     { id: 'fetch_goals', label: 'Goals' },
@@ -40,7 +46,11 @@ const FetcherButtons: React.FC<FetcherButtonsProps> = ({ currentFetcher, onFetch
             ) : (
               <div className="flex items-center">
                 <span>{option.label}</span>
-                {currentFetcher === option.id && <Check className="ml-1 w-3 h-3" />}
+                {completedFetchers.includes(option.id) && (
+                  currentFetcher === option.id ? 
+                    <Check className="ml-1 w-3 h-3" /> : 
+                    <span className="ml-1 w-2 h-2 rounded-full bg-green-500 inline-block"></span>
+                )}
               </div>
             )}
           </button>
