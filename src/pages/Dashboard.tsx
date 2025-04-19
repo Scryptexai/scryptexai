@@ -1,28 +1,59 @@
 
-import { Button } from "@/components/ui/button";
+import React from "react";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+import AgentCard from "@/components/dashboard/AgentCard";
+import XpProgress from "@/components/dashboard/XpProgress";
+import RecentActivity from "@/components/dashboard/RecentActivity";
 
 const Dashboard = () => {
+  const agents = [
+    {
+      title: "Analyze Agent",
+      description: "Deep-dive into any crypto project",
+      icon: "/media/analyze-icon.png",
+      path: "/dashboard/analyze",
+    },
+    {
+      title: "Farming Agent",
+      description: "Automate onchain tasks and actions",
+      icon: "/media/farming-icon.png",
+      path: "/dashboard/farming",
+    },
+    {
+      title: "Twitter Agent",
+      description: "Engage with Web3 content automatically",
+      icon: "/media/twitter-icon.png",
+      path: "/dashboard/twitter",
+    },
+    {
+      title: "Airdrop Explorer",
+      description: "Find and track potential airdrops",
+      icon: "/media/airdrop-icon.png",
+      path: "/dashboard/airdrops",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Scryptex Dashboard</h1>
-        <p className="mb-4">Welcome to your AI-powered airdrop hunting dashboard.</p>
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-lg font-semibold mb-2">Analyze a Project</h2>
-          <div className="grid gap-4">
-            <p>Enter project details to start AI analysis:</p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <input 
-                type="text" 
-                placeholder="Project name or URL" 
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              />
-              <Button>Analyze Project</Button>
-            </div>
-          </div>
-        </div>
+    <DashboardLayout>
+      <h1 className="mb-6 text-2xl font-bold">Dashboard</h1>
+      
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {agents.map((agent) => (
+          <AgentCard 
+            key={agent.title} 
+            title={agent.title} 
+            description={agent.description} 
+            icon={agent.icon} 
+            path={agent.path} 
+          />
+        ))}
       </div>
-    </div>
+      
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <XpProgress />
+        <RecentActivity />
+      </div>
+    </DashboardLayout>
   );
 };
 
